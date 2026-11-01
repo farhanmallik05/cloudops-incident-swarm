@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.env
+.env.local
+venv/
+env/
+.pytest_cache/
+.coverage
+*.log
+graphify-out/
+*.zip

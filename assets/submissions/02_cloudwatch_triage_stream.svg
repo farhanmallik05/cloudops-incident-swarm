@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" style="background:#090d16;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace">
+  <defs>
+    <linearGradient id="streamBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a101d" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="675" fill="#090d16" />
+
+  <!-- Top Navigation & Alert Banner -->
+  <g transform="translate(60, 30)" filter="url(#shadow)">
+    <rect x="0" y="0" width="1080" height="64" rx="14" fill="#0f172a" stroke="#1e293b" />
+    
+    <rect x="25" y="18" width="80" height="28" rx="6" fill="#7f1d1d" stroke="#ef4444" />
+    <text x="65" y="36" fill="#fca5a5" font-size="11" font-weight="bold" text-anchor="middle">CRITICAL</text>
+
+    <text x="120" y="38" fill="#f8fafc" font-size="16" font-weight="bold">CloudWatch Log Stream Ingestion &amp; Triage Specialist</text>
+    <text x="660" y="38" fill="#94a3b8" font-size="12">Group: /aws/ecs/payment-service • Window: Last 15m</text>
+
+    <rect x="945" y="16" width="110" height="32" rx="8" fill="#064e3b" stroke="#10b981" />
+    <text x="1000" y="36" fill="#34d399" font-size="11" font-weight="bold" text-anchor="middle">● STREAMING</text>
+  </g>
+
+  <!-- Left: Real-time Metric Graphs (CloudWatch Anomaly) -->
+  <g transform="translate(60, 115)" filter="url(#shadow)">
+    <rect x="0" y="0" width="420" height="520" rx="14" fill="url(#streamBg)" stroke="#1e293b" />
+
+    <text x="24" y="35" fill="#38bdf8" font-size="13" font-weight="bold">📈 5XX HTTP ERROR RATE SPIKE</text>
+    <text x="24" y="55" fill="#64748b" font-size="10">Aggregated per 30-second interval</text>
+
+    <!-- Spike graph visual -->
+    <g transform="translate(24, 75)">
+      <!-- Grid lines -->
+      <line x1="0" y1="120" x2="370" y2="120" stroke="#1e293b" stroke-width="1" />
+      <line x1="0" y1="60" x2="370" y2="60" stroke="#1e293b" stroke-width="1" stroke-dasharray="4,4" />
+      
+      <!-- Graph baseline and spike -->
+      <path d="M 0,118 L 60,117 L 120,116 L 160,118 L 190,112 L 210,15 L 240,22 L 270,18 L 310,25 L 370,30" 
+            fill="none" stroke="#ef4444" stroke-width="3" />
+      
+      <!-- Gradient area under curve -->
+      <path d="M 0,118 L 60,117 L 120,116 L 160,118 L 190,112 L 210,15 L 240,22 L 270,18 L 310,25 L 370,30 L 370,120 L 0,120 Z" 
+            fill="#ef4444" fill-opacity="0.15" />
+
+      <!-- Spike Marker -->
+      <circle cx="210" cy="15" r="5" fill="#ef4444" stroke="#ffffff" stroke-width="2" />
+      <text x="220" y="15" fill="#fca5a5" font-size="10" font-weight="bold">Spike: 42.8% (Threshold &gt; 1%)</text>
+
+      <text x="0" y="140" fill="#64748b" font-size="9">10:15:00</text>
+      <text x="180" y="140" fill="#fca5a5" font-size="9">10:22:30 (Alert)</text>
+      <text x="330" y="140" fill="#64748b" font-size="9">10:30:00</text>
+    </g>
+
+    <line x1="24" y1="240" x2="396" y2="240" stroke="#1e293b" />
+
+    <!-- Triage Assessment Metrics -->
+    <text x="24" y="270" fill="#f8fafc" font-size="12" font-weight="bold">TRIAGE AUTOMATION METRICS</text>
+
+    <g transform="translate(24, 290)" font-size="11">
+      <rect x="0" y="0" width="372" height="42" rx="8" fill="#111827" stroke="#374151" />
+      <text x="12" y="25" fill="#94a3b8">Log Event Scan Volume:</text>
+      <text x="360" y="25" fill="#f8fafc" font-weight="bold" text-anchor="end">128,450 records</text>
+
+      <rect x="0" y="52" width="372" height="42" rx="8" fill="#111827" stroke="#374151" />
+      <text x="12" y="77" fill="#94a3b8">Unique Error Fingerprints:</text>
+      <text x="360" y="77" fill="#f59e0b" font-weight="bold" text-anchor="end">2 Distinct Signatures</text>
+
+      <rect x="0" y="104" width="372" height="42" rx="8" fill="#111827" stroke="#374151" />
+      <text x="12" y="129" fill="#94a3b8">Target Service ARN:</text>
+      <text x="360" y="129" fill="#38bdf8" font-size="9" font-weight="bold" text-anchor="end">arn:aws:ecs:payment-api</text>
+
+      <rect x="0" y="156" width="372" height="50" rx="8" fill="#064e3b" stroke="#059669" />
+      <text x="12" y="176" fill="#34d399" font-weight="bold">TRIAGE CONCLUSION DISPATCHED</text>
+      <text x="12" y="194" fill="#a7f3d0" font-size="10">Database connection pool starvation triggered by commit e4b29</text>
+    </g>
+  </g>
+
+  <!-- Right: Live Log Console Stream -->
+  <g transform="translate(505, 115)" filter="url(#shadow)">
+    <rect x="0" y="0" width="635" height="520" rx="14" fill="#020617" stroke="#1e293b" />
+    
+    <!-- Console Title Bar -->
+    <rect x="0" y="0" width="635" height="36" rx="14" fill="#0f172a" />
+    <rect x="0" y="24" width="635" height="12" fill="#0f172a" />
+    <text x="20" y="22" fill="#94a3b8" font-size="11" font-weight="bold">tail -f /aws/ecs/payment-service | grep -E "(ERROR|FATAL|EXCEPTION)"</text>
+
+    <!-- Raw Live Log Lines -->
+    <g transform="translate(20, 55)" font-size="10.5">
+      <!-- Line 1 -->
+      <text x="0" y="15" fill="#64748b">[10:22:14.201] <tspan fill="#38bdf8">INFO</tspan> [Server] Worker pool healthy (active_conns=12/100)</text>
+
+      <!-- Line 2 -->
+      <text x="0" y="38" fill="#64748b">[10:22:21.849] <tspan fill="#eab308">WARN</tspan> [DBPool] Connection checkout wait &gt; 2500ms on thread #48</text>
+
+      <!-- Line 3 Error -->
+      <rect x="-5" y="48" width="605" height="22" fill="#450a0a" />
+      <text x="0" y="63" fill="#fca5a5" font-weight="bold">[10:22:25.102] ERROR [DBPool] Timeout: connection pool exhausted (active=100, max=100)</text>
+
+      <!-- Line 4 Trace -->
+      <text x="0" y="88" fill="#f87171">    at acquireConnection (/srv/db/pool.js:84:19)</text>
+      <text x="0" y="106" fill="#f87171">    at processPaymentIntent (/srv/controllers/checkout.js:42:11)</text>
+
+      <!-- Line 5 Cascade -->
+      <rect x="-5" y="116" width="605" height="22" fill="#450a0a" />
+      <text x="0" y="131" fill="#fca5a5" font-weight="bold">[10:22:26.541] FATAL [HttpServer] 504 Gateway Timeout: /v1/checkout/charge</text>
+
+      <!-- Line 6 Cascade -->
+      <text x="0" y="156" fill="#f87171">[10:22:27.009] ERROR [HttpServer] 504 Gateway Timeout: /v1/checkout/charge</text>
+      <text x="0" y="176" fill="#f87171">[10:22:27.412] ERROR [HttpServer] 504 Gateway Timeout: /v1/checkout/charge</text>
+
+      <!-- Line 7 Triage Intervention -->
+      <rect x="-5" y="196" width="605" height="90" rx="8" fill="#042f2e" stroke="#0d9488" stroke-width="1.5" />
+      <text x="15" y="220" fill="#2dd4bf" font-size="12" font-weight="bold">🤖 [STRANDS TRIAGE SPECIALIST AUTONOMOUS INTERCEPT]</text>
+      <text x="15" y="242" fill="#ccfbf1" font-size="11">Correlated 482 errors to db.checkout.js connection acquire leak.</text>
+      <text x="15" y="260" fill="#ccfbf1" font-size="11">Originating IP: 10.0.4.12 | ECS Task: f4928b12-9c98-4d51-8</text>
+      <text x="15" y="278" fill="#99f6e4" font-size="10">» Emitting structured incident event to Diagnostic Specialist...</text>
+
+      <!-- Line 8 Diagnostic handoff -->
+      <text x="0" y="315" fill="#64748b">[10:22:31.020] <tspan fill="#38bdf8">INFO</tspan> [Strands] Diagnostic agent initiated git log analysis on repo...</text>
+      <text x="0" y="338" fill="#64748b">[10:22:32.140] <tspan fill="#a855f7">DIAG</tspan> Found release PR #142 deployed at 10:20:00 (commit e4b29f)</text>
+      <text x="0" y="361" fill="#64748b">[10:22:33.450] <tspan fill="#a855f7">DIAG</tspan> Patch introduced missing finally { client.release(); } block.</text>
+
+      <!-- Line 9 Streaming indicator -->
+      <text x="0" y="410" fill="#22c55e">farhan@sre-swarm:~$ streaming telemetry active [buffers: 0 drops] <tspan fill="#22c55e">_</tspan></text>
+      <rect x="510" y="398" width="8" height="15" fill="#22c55e" opacity="0.8" />
+    </g>
+  </g>
+</svg>
+
