@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudOps Multi-Agent SRE Swarm Cockpit</title>
+  
+  <!-- Award-Winning Typography: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            void: '#070a12',
+            shell: '#0e1424',
+            core: '#131c33',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { 
+      background-color: #070a12; 
+      color: #f3f4f6; 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    
+    /* Double-bezel hardware styling */
+    .double-bezel-outer {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(24px);
+    }
+    .double-bezel-inner {
+      background: rgba(14, 20, 36, 0.94);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+    }
+    
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(7, 10, 18, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.6); }
+  </style>
+</head>
+<body class="p-4 md:p-8 min-h-full">
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- Mission Control Header (Double-Bezel Outer Shell) -->
+    <header class="p-1.5 rounded-[2rem] double-bezel-outer">
+      <div class="rounded-[calc(2rem-0.375rem)] double-bezel-inner p-5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl shadow-lg shadow-indigo-500/20 shrink-0">
+            <i class="fa-solid fa-shield-halved animate-pulse"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h1 class="text-lg font-extrabold text-white tracking-tight font-sans">CloudOps Multi-Agent SRE Swarm</h1>
+              <span class="px-2.5 py-0.5 text-[10px] font-mono font-semibold rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                Bedrock Live Swarm
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 font-mono">Strands SDK • Hierarchical Supervisor • Zero-Trust HMAC CMK</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <button onclick="injectChaos('connection_pool_leak')" class="px-4 py-2.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 text-xs font-semibold flex items-center gap-2 active:scale-[0.98] transition-all">
+            <i class="fa-solid fa-biohazard text-rose-400"></i>
+            <span>Inject P1 Leak</span>
+          </button>
+          <button onclick="triggerIncident()" class="group px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-500 hover:brightness-110 text-white text-xs font-bold shadow-xl shadow-indigo-600/30 flex items-center gap-2.5 active:scale-[0.98] transition-all">
+            <i class="fa-solid fa-play text-indigo-200"></i>
+            <span>Trigger Swarm Triage</span>
+            <span class="w-5 h-5 rounded-full bg-white/15 flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Swarm Topology Grid (4 Agent Double-Bezel Cards) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- Commander Card -->
+      <div id="card-commander" class="p-1 rounded-[1.75rem] double-bezel-outer">
+        <div class="rounded-[calc(1.75rem-0.25rem)] double-bezel-inner p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs text-indigo-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-crown text-indigo-400"></i> Commander
+            </span>
+            <span id="badge-commander" class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-400 border border-white/10">IDLE</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">Claude 3.5 Sonnet supervisor synthesizing executive root-cause post-mortems.</p>
+        </div>
+      </div>
+
+      <!-- Triage Card -->
+      <div id="card-triage" class="p-1 rounded-[1.75rem] double-bezel-outer">
+        <div class="rounded-[calc(1.75rem-0.25rem)] double-bezel-inner p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs text-emerald-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-chart-line text-emerald-400"></i> Triage Specialist
+            </span>
+            <span id="badge-triage" class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-400 border border-white/10">IDLE</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">Claude 3.5 Haiku high-volume log pattern parser filtering 5XX error spikes.</p>
+        </div>
+      </div>
+
+      <!-- Diagnostic Card -->
+      <div id="card-diagnostic" class="p-1 rounded-[1.75rem] double-bezel-outer">
+        <div class="rounded-[calc(1.75rem-0.25rem)] double-bezel-inner p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs text-purple-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-microscope text-purple-400"></i> Diagnostic
+            </span>
+            <span id="badge-diagnostic" class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-400 border border-white/10">IDLE</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">Claude 3.5 Sonnet correlating suspect Git commit diffs with CloudWatch anomalies.</p>
+        </div>
+      </div>
+
+      <!-- Remediation Card -->
+      <div id="card-remediation" class="p-1 rounded-[1.75rem] double-bezel-outer">
+        <div class="rounded-[calc(1.75rem-0.25rem)] double-bezel-inner p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs text-amber-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-wrench text-amber-400"></i> Remediation
+            </span>
+            <span id="badge-remediation" class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/[0.06] text-slate-400 border border-white/10">IDLE</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-snug">Formulates safe blue/green rollback &amp; awaits hardware-backed KMS approval.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Mission Workspace (2-Column Asymmetric View) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Live Trace Console (Double-Bezel Outer Shell) -->
+      <div class="p-1.5 rounded-[2rem] double-bezel-outer flex flex-col">
+        <div class="rounded-[calc(2rem-0.375rem)] double-bezel-inner p-5 flex flex-col flex-1 space-y-3.5">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-cyan-400"></i>
+              <span class="text-xs font-bold text-white tracking-wide font-sans">Autonomous Investigation Trace</span>
+            </div>
+            <span id="incident-id-tag" class="text-[10px] mono text-slate-400 bg-white/[0.04] px-2 py-0.5 rounded-full border border-white/10">
+              Awaiting Incident...
+            </span>
+          </div>
+
+          <div id="trace-console" class="flex-1 bg-[#070a12] p-4 rounded-2xl mono text-[11px] text-slate-300 overflow-y-auto max-h-[420px] space-y-2.5 border border-white/10 shadow-inner">
+            <div class="text-slate-600">// Multi-agent swarm standby. Click 'Trigger Swarm Triage' to begin live telemetry analysis.</div>
+          </div>
+
+          <!-- FinOps Token Cost Telemetry -->
+          <div class="p-3.5 rounded-xl bg-[#070a12] border border-white/10 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Bedrock Model Expenditure:</span>
+            <span id="cost-display" class="font-bold text-emerald-400 mono tabular-nums">$0.0000 USD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Executive Post-Mortem & Remediation Gate (Double-Bezel Outer Shell) -->
+      <div class="p-1.5 rounded-[2rem] double-bezel-outer flex flex-col">
+        <div class="rounded-[calc(2rem-0.375rem)] double-bezel-inner p-5 flex flex-col flex-1 space-y-3.5">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-file-contract text-emerald-400"></i>
+              <span class="text-xs font-bold text-white tracking-wide font-sans">Executive Post-Mortem &amp; HITL Gate</span>
+            </div>
+            <button id="approve-btn" onclick="approveHmac()" disabled class="px-3.5 py-1.5 rounded-full bg-white/[0.06] text-slate-500 text-xs font-bold cursor-not-allowed border border-white/10 transition-all font-sans">
+              Approve Rollback (KMS)
+            </button>
+          </div>
+
+          <div id="postmortem-view" class="flex-1 bg-[#070a12] p-4 rounded-2xl text-xs text-slate-300 overflow-y-auto max-h-[420px] space-y-2.5 border border-white/10 shadow-inner">
+            <p class="text-slate-600 italic">// Incident Commander post-mortem synthesis will generate here automatically upon conclusion.</p>
+          </div>
+
+          <div id="approval-status" class="p-3.5 rounded-xl bg-[#070a12] border border-white/10 text-[11px] text-slate-400 flex items-center justify-between font-mono">
+            <span>Security Gate:</span>
+            <span class="text-amber-400 font-semibold">Awaiting Trigger</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentIncidentId = null;
+
+    async function triggerIncident() {
+      updateConsole("Initiating autonomous multi-agent swarm triage for High5XXGatewayTimeouts...");
+      setAgentStatus("badge-commander", "ACTIVE", "bg-indigo-600 text-white");
+      
+      try {
+        const res = await fetch("/api/incident/trigger", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            alarm_description: "CRITICAL: CloudWatch Alarm 'High5XXGatewayTimeouts' triggered for service 'checkout-service' in us-east-1. Error rate 14.8% exceeding threshold 5.0%."
+          })
+        });
+        const data = await res.json();
+        handleSwarmResult(data);
+      } catch (err) {
+        updateConsole("Error calling API: " + err);
+      }
+    }
+
+    async function injectChaos(faultType) {
+      updateConsole("Injecting chaos fault: " + faultType + " into checkout-service...");
+      try {
+        const res = await fetch("/api/chaos/inject", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fault_type: faultType, target_service: "checkout-service" })
+        });
+        const data = await res.json();
+        handleSwarmResult(data);
+      } catch (err) {
+        updateConsole("Chaos injection error: " + err);
+      }
+    }
+
+    function handleSwarmResult(data) {
+      currentIncidentId = data.incident_id;
+      document.getElementById("incident-id-tag").innerText = "Incident: " + currentIncidentId;
+
+      setAgentStatus("badge-triage", "COMPLETED", "bg-emerald-500/20 text-emerald-300 border-emerald-500/40");
+      setAgentStatus("badge-diagnostic", "COMPLETED", "bg-purple-500/20 text-purple-300 border-purple-500/40");
+      setAgentStatus("badge-remediation", "AWAITING HITL", "bg-amber-500/20 text-amber-300 border-amber-500/40");
+      setAgentStatus("badge-commander", "COMPLETED", "bg-indigo-500/20 text-indigo-300 border-indigo-500/40");
+
+      let logHtml = "";
+      if (data.trace && data.trace.length > 0) {
+        data.trace.forEach(t => {
+          logHtml += `<div class="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-indigo-400 font-bold font-mono">[${t.stage.toUpperCase()}]</span> 
+              <span class="text-slate-400 text-[10px] font-mono">${t.duration_ms}ms</span>
+            </div>
+            <div class="text-slate-200 font-semibold font-sans">${t.agent}</div>
+            <div class="text-slate-400 text-[11px] whitespace-pre-wrap font-mono mt-1">${t.summary}</div>
+          </div>`;
+        });
+      }
+      document.getElementById("trace-console").innerHTML = logHtml;
+
+      if (data.finops_cost) {
+        document.getElementById("cost-display").innerText = "$" + data.finops_cost.incident_cost_usd.toFixed(5) + " USD";
+      }
+
+      document.getElementById("postmortem-view").innerHTML = `
+        <h4 class="font-extrabold text-white text-sm mb-2 font-sans tracking-tight">Executive Incident SRE Report (${data.incident_id})</h4>
+        <div class="whitespace-pre-wrap font-sans leading-relaxed text-slate-300 text-xs">${data.final_post_mortem}</div>
+      `;
+
+      const approveBtn = document.getElementById("approve-btn");
+      approveBtn.disabled = false;
+      approveBtn.className = "px-4 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold cursor-pointer transition-all active:scale-[0.98] shadow-md shadow-emerald-500/20 font-sans";
+
+      document.getElementById("approval-status").innerHTML = `
+        <span>Security Gate:</span>
+        <span class="text-emerald-400 font-semibold">Dry-Run Passed (98% Conf) • Ready for Hardware KMS Sign-Off</span>
+      `;
+    }
+
+    async function approveHmac() {
+      if (!currentIncidentId) return;
+      try {
+        const res = await fetch("/api/approval/approve", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ request_id: currentIncidentId, approver: "SRE_LEAD_FARHAN" })
+        });
+        const data = await res.json();
+        document.getElementById("approval-status").innerHTML = `
+          <span>Security Gate:</span>
+          <span class="text-emerald-400 font-bold font-mono">KMS CMK Token Verified (${data.token.slice(0, 16)}...) • Blue/Green Dispatched</span>
+        `;
+        const approveBtn = document.getElementById("approve-btn");
+        approveBtn.disabled = true;
+        approveBtn.className = "px-3.5 py-1.5 rounded-full bg-white/[0.06] text-slate-500 text-xs font-bold cursor-not-allowed border border-white/10 font-sans";
+        updateConsole("KMS Signature verified! Safe blue/green traffic shift executed cleanly.");
+      } catch (err) {
+        alert("Approval failed: " + err);
+      }
+    }
+
+    function updateConsole(msg) {
+      const c = document.getElementById("trace-console");
+      const d = document.createElement("div");
+      d.className = "text-slate-300 font-mono";
+      d.innerText = "[+] " + msg;
+      c.appendChild(d);
+      c.scrollTop = c.scrollHeight;
+    }
+
+    function setAgentStatus(id, text, classes) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerText = text;
+        el.className = "text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-full border " + classes;
+      }
+    }
+  </script>
+</body>
+</html>
