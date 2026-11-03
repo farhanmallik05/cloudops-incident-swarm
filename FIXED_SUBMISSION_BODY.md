@@ -106,3 +106,4 @@ python cli_runner.py --chaos connection_pool_leak
 # Run the 5-scenario benchmark evaluator
 python run_benchmark.py
 ```
+
